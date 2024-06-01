@@ -1,12 +1,16 @@
 let foo, foo1
+let speakButton
 function setup() {
   createCanvas(400, 400);
 	frameRate(5);
 	foo = new p5.Speech(); // speech synthesis object
     foo1= new p5.Speech();
+    speakButton = createButton("Speak it");
+    speakButton.size(100, 100);
+    speakButton.mousePressed(speakit); // callback for speech
 }
 
-function draw() {
+function showPos() {
   background(220);
 	
 		navigator.geolocation.getCurrentPosition(
