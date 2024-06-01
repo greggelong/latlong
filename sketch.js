@@ -10,7 +10,7 @@ function setup() {
     speakButton.mousePressed(speakit); // callback for speech
 }
 
-function showPos() {
+function speakit() {
   background(220);
 	
 		navigator.geolocation.getCurrentPosition(
