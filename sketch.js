@@ -1,7 +1,7 @@
 let foo, foo1
 let speakButton
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(800, 800);
 	frameRate(5);
 	foo = new p5.Speech(); // speech synthesis object
     foo1= new p5.Speech();
