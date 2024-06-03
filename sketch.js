@@ -1,24 +1,40 @@
 let foo, foo1
 let speakButton
+let capture
+let img
 function setup() {
   createCanvas(800, 800);
 	frameRate(5);
+    pixelDensity(1)
 	foo = new p5.Speech(); // speech synthesis object
     foo1= new p5.Speech();
+    capture = createCapture(VIDEO,{ flipped:true });
+    capture.size(100,100);
+    capture.hide()
+    background(0)
+    ellipse(width/2,height/2,100,100)
+    
     speakButton = createButton("Speak it");
     speakButton.size(100, 100);
     speakButton.mousePressed(speakit); // callback for speech
 }
 
+function draw(){
+    image(capture,0,0,800,800)
+
+}
+
 function speakit() {
-  background(220);
+  
 	
 		navigator.geolocation.getCurrentPosition(
 
     // Success callback
     function(position) {
-			background(220);
+			
 			textSize(32);
+            stroke(255)
+            fill(0)
             
             
 			text("latitude: " + position.coords.latitude, 5, 100);
@@ -29,6 +45,14 @@ function speakit() {
             
             foo.setLang("zh-CN");
             foo.speak("全世界工人联合起来")
+
+            let snap=canvas.toDataURL()
+            print(snap)
+            createImg(snap,0,0,800,800)
+            getStreet()
+
+            createP("latitude: " + position.coords.latitude +",longitude: " + position.coords.longitude)
+            createP("全世界工人联合起来")
             
 
             
@@ -74,3 +98,23 @@ function speakit() {
 );
 	
 }
+
+
+
+async function getStreet(){
+    /* 
+    if (img) {
+      img.remove();
+      //uncomment to delete old image;
+    }
+     */
+    let loc = random(["city","desert","jungle","tundra","outer-space"])
+    //img = await createImg("https://image.pollinations.ai/prompt/a%20view%20from%20the%20back%20of%20a%20taxi%20in%20a%20futuristic%20"+loc+"%20with%20a%20cool%20person%20in%20the%20backseat?width=800&height=800&nologo=true&seed="+floor(random(1026)),"street scene")
+    
+    img = await createImg("https://image.pollinations.ai/prompt/three%20workers%20with%20yellow%20helments%20working%20on%20a%20larg%20construction%20site%20in%20a%20city%20along%20the%20highway?width=800&height=800&nologo=true&seed="+floor(random(1026)),"street scene");
+    //img.position(cx,cy)
+   img.parent("sketch-holder")
+   
+   //cnv.image(img,0,0)
+     
+  }
