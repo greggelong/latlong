@@ -47,7 +47,7 @@ function speakit() {
 
     // Success callback
     function(position) {
-			
+			createP("--------------------------------------------------")
 			textSize(42);
             stroke(255)
             fill(255,0,0)
