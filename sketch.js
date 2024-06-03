@@ -33,7 +33,7 @@ function setup() {
 
   speakButton = createButton("Speak it");
   speakButton.size(300, 300);
-  speakButton.mousePressed(speakit); // callback for speech
+  speakButton.mousePressed(speakit2); // callback for speech
   speakButton.parent("buttonholder");
 }
 
@@ -81,15 +81,22 @@ function speakit() {
             message - Details about the error in human-readable format.
         }
         */
-       
     }
   );
+  speakit2()
+}
+
+function speakit2() {
   let sp = createP("-----------------------------------");
   sp.parent("sketch-holder");
   textSize(42);
   stroke(255);
   fill(255, 0, 0);
   textStyle(BOLD);
+  if(!mylat){
+    mylat =39
+    mylong=116
+  }
 
   text("latitude: " + mylat, 5, 100);
   text("longitude: " + mylong, 5, 200);
