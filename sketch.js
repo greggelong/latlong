@@ -10,8 +10,20 @@ function setup() {
     pixelDensity(1)
 	foo = new p5.Speech(); // speech synthesis object
     foo1= new p5.Speech();
-    capture = createCapture(VIDEO,{ flipped:true });
-    capture.size(100,100);
+    //capture = createCapture(VIDEO,{ flipped:true });
+    var constraints = {
+        audio: false,
+        video: {
+          facingMode: {
+            exact: "environment"
+          }
+        }    
+        //video: {
+          //facingMode: "user"
+        //} 
+      };
+    capture = createCapture(VIDEO,constraints);
+    capture.size(400,400);
     capture.hide()
     background(0)
     ellipse(width/2,height/2,100,100)
