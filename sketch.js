@@ -3,6 +3,9 @@ let speakButton;
 let capture;
 let img;
 let cnv;
+let mylat;
+  let mylong;
+  let mymessage = "全世界工人联合起来";
 function setup() {
   cnv = createCanvas(800, 800);
   cnv.parent("button");
@@ -39,9 +42,7 @@ function draw() {
 }
 
 function speakit() {
-  let mylat;
-  let mylong;
-  let mymessage = "全世界工人联合起来";
+  
 
   navigator.geolocation.getCurrentPosition(
     // Success callback
