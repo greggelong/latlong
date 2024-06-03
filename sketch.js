@@ -81,8 +81,7 @@ function speakit() {
             message - Details about the error in human-readable format.
         }
         */
-      mylat = 0;
-      mylong = 0;
+       
     }
   );
   let sp = createP("-----------------------------------");
