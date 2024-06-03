@@ -135,7 +135,7 @@ async function getStreet(){
     
     //img = await createImg("https://image.pollinations.ai/prompt/three%20workers%20with%20yellow%20helments%20working%20on%20a%20larg%20construction%20site%20in%20"+loc+"?width=800&height=800&nologo=true&seed="+floor(random(1026)),"street scene");
     let prompts = ["https://image.pollinations.ai/prompt/%20workers%20from%20all%20around%20the%20world%20come%20together%20on%20the%20worksite,%20they%20cheer%20and%20are%20joyous%20as%20fireworks%20go%20off%20overhead?width=800&height=800&nologo=true&seed=","https://image.pollinations.ai/prompt/%20workers%20from%20around%20the%20world%20unite,%20each%20one%20with%20a%20flag%20in%20hand%20and%20big%20red%20banner%20which%20reads%20%E2%80%9Cworkers%20of%20the%20world%20unite%E2%80%9D%20on%20a%20construction%20site%20?width=800&height=800&nologo=true&seed="]
-    img = await createImg(random(promts)+floor(random(1026)),"street scene");
+    img = await createImg(random(prompts)+floor(random(1026)),"street scene");
 
 
     //img.position(cx,cy)
