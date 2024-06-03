@@ -143,6 +143,7 @@ async function getStreet() {
     "https://image.pollinations.ai/prompt/%20workers%20from%20around%20the%20world%20unite,%20workers%20are%20all%20female%20wearing%20pink%20hard%20hats%20with%20banners%20reading%20%E2%80%9Cwomen%20workers%20unite%E2%80%9D%20on%20the%20building%20site%20?width=800&height=800&nologo=true&seed=",
     "https://image.pollinations.ai/prompt/%20workers%20from%20around%20the%20world%20unite,%20workers%20hold%20babies%20in%20their%20arms.%20They%20are%20high%20up%20on%20girders%20over%20the%20building%20site,%20they%20smile%20and%20point%20into%20the%20distance%20towards%20the%20sunset%20where%20there%20are%20half%20finished%20apartment%20complexes%20under%20construction%20%E2%80%9D%20on%20the%20building%20site%20?width=800&height=800&nologo=true&seed=","https://image.pollinations.ai/prompt/bare%20chested%20muscular%20workers%20in%20hard%20hats%20on%20building%20construction%20site%20party%20like%20it%E2%80%99s%201989%20?width=800&height=800&nologo=true&seed=","https://image.pollinations.ai/prompt/joyous%20bare%20chested%20muscular%20workers%20in%20hard%20hats%20on%20building%20construction%20site%20perform%20acrobatic%20stunts%20with%20colorful%20confetti%20?width=800&height=800&nologo=true&seed="
   ];
+  print(prmpts.length)
   img = await createImg(random(prmpts) + floor(random(1026)), "street scene");
 
   //img.position(cx,cy)
