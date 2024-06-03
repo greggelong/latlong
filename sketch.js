@@ -64,7 +64,7 @@ function speakit() {
             foo.setLang("zh-CN");
             foo.speak("全世界工人联合起来")
 
-            let snap=createImg(canvas.toDataURL())
+            let snap=createImg(canvas.toDataURL(),"snapshot")
             print(snap)
             //createImg(snap,"snap shot")
             snap.parent("sketch-holder")
