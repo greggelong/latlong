@@ -47,7 +47,8 @@ function speakit() {
 
     // Success callback
     function(position) {
-			createP("--------------------------------------------------")
+			let sp = createP("--------------------------------------------------")
+            sp.parent("sketch-holder")
 			textSize(42);
             stroke(255)
             fill(255,0,0)
