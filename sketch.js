@@ -2,9 +2,11 @@ let foo, foo1
 let speakButton
 let capture
 let img
+let cnv
 function setup() {
-  createCanvas(800, 800);
-	frameRate(5);
+    cnv  = createCanvas(800, 800);
+    cnv.parent("button")
+	//frameRate(5);
     pixelDensity(1)
 	foo = new p5.Speech(); // speech synthesis object
     foo1= new p5.Speech();
@@ -15,8 +17,10 @@ function setup() {
     ellipse(width/2,height/2,100,100)
     
     speakButton = createButton("Speak it");
-    speakButton.size(100, 100);
+    speakButton.size(300, 300);
     speakButton.mousePressed(speakit); // callback for speech
+    speakButton.parent("buttonholder")
+     
 }
 
 function draw(){
@@ -46,13 +50,17 @@ function speakit() {
             foo.setLang("zh-CN");
             foo.speak("全世界工人联合起来")
 
-            let snap=canvas.toDataURL()
+            let snap=createImg(canvas.toDataURL())
             print(snap)
-            createImg(snap,0,0,800,800)
+            //createImg(snap,"snap shot")
+            snap.parent("sketch-holder")
+            print("hello")
             getStreet()
 
-            createP("latitude: " + position.coords.latitude +",longitude: " + position.coords.longitude)
-            createP("全世界工人联合起来")
+            let txt1 = createP("latitude: " + position.coords.latitude +",longitude: " + position.coords.longitude)
+            let txt2 = createP("全世界工人联合起来")
+            txt1.parent("sketch-holder")
+            txt2.parent("sketch-holder")
             
 
             
@@ -114,6 +122,7 @@ async function getStreet(){
     img = await createImg("https://image.pollinations.ai/prompt/three%20workers%20with%20yellow%20helments%20working%20on%20a%20larg%20construction%20site%20in%20"+loc+"?width=800&height=800&nologo=true&seed="+floor(random(1026)),"street scene");
     //img.position(cx,cy)
    img.parent("sketch-holder")
+   //createImg(img,"worker scene")
    
    //cnv.image(img,0,0)
      
