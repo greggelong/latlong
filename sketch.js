@@ -32,7 +32,7 @@ function speakit() {
     // Success callback
     function(position) {
 			
-			textSize(32);
+			textSize(42);
             stroke(255)
             fill(0)
             
