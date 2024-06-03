@@ -50,7 +50,8 @@ function speakit() {
 			
 			textSize(42);
             stroke(255)
-            fill(0)
+            fill(255,0,0)
+            textStyle(BOLD);
             
             
 			text("latitude: " + position.coords.latitude, 5, 100);
