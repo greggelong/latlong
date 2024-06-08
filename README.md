@@ -45,6 +45,9 @@ The installation aims to provoke thought and dialogue about the interconnectedne
 
 **Conclusion:**
 "Mapping Journeys: Artificial Voices of Labor and Progress in Generative Spaces" by the Art Workers Art Collective leverages technology to blend reality with imagination, creating a powerful commentary on the labor that shapes our urban landscapes and the critical role of drivers. This art installation not only entertains but also educates and inspires action towards improving labor conditions and recognizing the human element in our cities' continuous evolution.
+
+--------
+
 **艺术提案：“地图之旅：虚拟空间中的劳动与进步之声”**
 
 **概述：**
