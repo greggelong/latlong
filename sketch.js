@@ -6,6 +6,7 @@ let cnv;
 let mylat;
 let mylong;
 let mymessage = "全世界工人联合起来";
+let stops = []   // these are worksites 
 function setup() {
   cnv = createCanvas(800, 800);
   cnv.parent("button");
@@ -33,8 +34,9 @@ function setup() {
 
   speakButton = createButton("Speak it");
   speakButton.size(300, 300);
-  speakButton.mousePressed(speakit2); // callback for speech
+  speakButton.mousePressed(speakit); // callback for speech
   speakButton.parent("buttonholder");
+  
 }
 
 function draw() {
@@ -87,6 +89,7 @@ function speakit() {
 }
 
 function speakit2() {
+  getStops()// put a stop in the array
   let sp = createP("-----------------------------------");
   sp.parent("sketch-holder");
   textSize(42);
@@ -97,15 +100,23 @@ function speakit2() {
     mylat =39
     mylong=116
   }
+  let c = stops[stops.length-1].chinese
+  let e = stops[stops.length-1].english
 
   text("latitude: " + mylat, 5, 100);
   text("longitude: " + mylong, 5, 200);
-  text("全世界工人联合起来", 5, 300);
+  text("site: " + c, 5, 300);
+  text("site: " + e, 5, 400);
+  text("全世界工人联合起来", 5, 500);
+  
   foo1.setLang("en-US");
   foo1.speak("latitude: " + mylat + ",longitude: " + mylong);
+  foo1.speak(e)
 
   foo.setLang("zh-CN");
-  foo.speak("全世界工人联合起来");
+ 
+  foo.speak(c+",全世界工人联合起来");
+  
 
   let snap = createImg(canvas.toDataURL(), "snapshot");
   print(snap);
@@ -116,7 +127,11 @@ function speakit2() {
 
   let txt1 = createP("latitude: " + mylat + ",longitude: " + mylong);
   let txt2 = createP("全世界工人联合起来");
+  let txt3 = createP(e)
+  let txt4 = createP(c)
   txt1.parent("sketch-holder");
+  txt3.parent("sketch-holder");
+  txt4.parent("sketch-holder");
   txt2.parent("sketch-holder");
 }
 
@@ -151,4 +166,24 @@ async function getStreet() {
   //createImg(img,"worker scene")
 
   //cnv.image(img,0,0)
+}
+
+
+function getStops() {
+  // get number of random stops
+  // keep adding until you get the number
+  
+    let pAdj = random(adj);
+    let pNoun = random(nouns);
+    let pPlace = random(places);
+    // make new object
+    let newStop = { 
+        chinese: `${pAdj.chinese}${pNoun.chinese}${pPlace.chinese}`, // notice no space for chinese
+        pinyin: `${pAdj.pinyin} ${pNoun.pinyin} ${pPlace.pinyin}`, 
+        english: `${pAdj.english} ${pNoun.english} ${pPlace.english}`,
+    };
+    if (!stops.includes(newStop) ){
+        stops.push(newStop)
+    }
+  
 }
