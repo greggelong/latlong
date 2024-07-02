@@ -107,15 +107,16 @@ function speakit2() {
   text("longitude: " + mylong, 5, 200);
   text("site: " + c, 5, 300);
   text("site: " + e, 5, 400);
-  text("全世界工人联合起来", 5, 500);
-  
+  //text("全世界工人联合起来", 5, 500);
+  text("工人们辛苦了", 5, 500);
   foo1.setLang("en-US");
   foo1.speak("latitude: " + mylat + ",longitude: " + mylong);
   foo1.speak(e)
 
   foo.setLang("zh-CN");
  
-  foo.speak(c+",全世界工人联合起来");
+  //foo.speak(c+",全世界工人联合起来");
+  foo.speak(c+",工人们辛苦了");
   
 
   let snap = createImg(canvas.toDataURL(), "snapshot");
@@ -123,10 +124,11 @@ function speakit2() {
   //createImg(snap,"snap shot")
   snap.parent("sketch-holder");
   print("hello");
-  getStreet();
+  getStreet(e); // call the functin to get the image with the site text e
 
   let txt1 = createP("latitude: " + mylat + ",longitude: " + mylong);
-  let txt2 = createP("全世界工人联合起来");
+  //let txt2 = createP("全世界工人联合起来");
+  let txt2 = createP("工人们辛苦了");
   let txt3 = createP(e)
   let txt4 = createP(c)
   txt1.parent("sketch-holder");
@@ -135,7 +137,7 @@ function speakit2() {
   txt2.parent("sketch-holder");
 }
 
-async function getStreet() {
+async function getStreet(sitee) {
   /* 
     if (img) {
       img.remove();
@@ -143,23 +145,26 @@ async function getStreet() {
     }
      */
   let loc = random([
-    "a futuristic city",
-    "an ancient monument site in desert",
-    "a city on an alien world",
-    "on a city floating in outer-space",
+    "a futuristic city ",
+    "an ancient monument site in desert ",
+    "a city on an alien world ",
+    "on a city floating in outer-space ",
   ]);
+  loc = loc+ "in a site called "+sitee
+  print(loc)
   //img = await createImg("https://image.pollinations.ai/prompt/a%20view%20from%20the%20back%20of%20a%20taxi%20in%20a%20futuristic%20"+loc+"%20with%20a%20cool%20person%20in%20the%20backseat?width=800&height=800&nologo=true&seed="+floor(random(1026)),"street scene")
 
-  //img = await createImg("https://image.pollinations.ai/prompt/three%20workers%20with%20yellow%20helments%20working%20on%20a%20larg%20construction%20site%20in%20"+loc+"?width=800&height=800&nologo=true&seed="+floor(random(1026)),"street scene");
-  let prmpts = [
-    "https://image.pollinations.ai/prompt/%20workers%20from%20all%20around%20the%20world%20come%20together%20on%20the%20worksite,%20they%20cheer%20and%20are%20joyous%20as%20fireworks%20go%20off%20overhead?width=800&height=800&nologo=true&seed=",
-    "https://image.pollinations.ai/prompt/%20workers%20from%20around%20the%20world%20unite,%20each%20one%20with%20a%20flag%20in%20hand%20and%20big%20red%20banner%20which%20reads%20%E2%80%9Cworkers%20of%20the%20world%20unite%E2%80%9D%20on%20a%20construction%20site%20?width=800&height=800&nologo=true&seed=",
-    "https://image.pollinations.ai/prompt/%20workers%20from%20around%20the%20world%20unite,%20they%20dance%20around%20a%20building%20site%20holding%20hands%20and%20singing%20into%20megaphones%20?width=800&height=800&nologo=true&seed=",
-    "https://image.pollinations.ai/prompt/%20workers%20from%20around%20the%20world%20unite,%20workers%20are%20all%20female%20wearing%20pink%20hard%20hats%20with%20banners%20reading%20%E2%80%9Cwomen%20workers%20unite%E2%80%9D%20on%20the%20building%20site%20?width=800&height=800&nologo=true&seed=",
-    "https://image.pollinations.ai/prompt/%20workers%20from%20around%20the%20world%20unite,%20workers%20hold%20babies%20in%20their%20arms.%20They%20are%20high%20up%20on%20girders%20over%20the%20building%20site,%20they%20smile%20and%20point%20into%20the%20distance%20towards%20the%20sunset%20where%20there%20are%20half%20finished%20apartment%20complexes%20under%20construction%20%E2%80%9D%20on%20the%20building%20site%20?width=800&height=800&nologo=true&seed=","https://image.pollinations.ai/prompt/bare%20chested%20muscular%20workers%20in%20hard%20hats%20on%20building%20construction%20site%20party%20like%20it%E2%80%99s%201989%20?width=800&height=800&nologo=true&seed=","https://image.pollinations.ai/prompt/joyous%20bare%20chested%20muscular%20workers%20in%20hard%20hats%20on%20building%20construction%20site%20perform%20acrobatic%20stunts%20with%20colorful%20confetti%20?width=800&height=800&nologo=true&seed="
-  ];
-  print(prmpts.length)
-  img = await createImg(random(prmpts) + floor(random(1026)), "street scene");
+  //img = await createImg("https://image.pollinations.ai/prompt/two%20male%20workers%20and%20a%20female%20worker%20with%20yellow%20helments%20working%20on%20a%20larg%20construction%20site%20in%20"+loc+"?width=800&height=800&nologo=true&seed="+floor(random(1026)),"street scene");
+  img = await createImg("https://image.pollinations.ai/prompt/a%20larg%20construction%20site%20in%20"+loc+"?width=800&height=800&nologo=true&seed="+floor(random(1026)),"street scene");
+  // let prmpts = [
+  //   "https://image.pollinations.ai/prompt/%20workers%20from%20all%20around%20the%20world%20come%20together%20on%20the%20worksite,%20they%20cheer%20and%20are%20joyous%20as%20fireworks%20go%20off%20overhead?width=800&height=800&nologo=true&seed=",
+  //   "https://image.pollinations.ai/prompt/%20workers%20from%20around%20the%20world%20unite,%20each%20one%20with%20a%20flag%20in%20hand%20and%20big%20red%20banner%20which%20reads%20%E2%80%9Cworkers%20of%20the%20world%20unite%E2%80%9D%20on%20a%20construction%20site%20?width=800&height=800&nologo=true&seed=",
+  //   "https://image.pollinations.ai/prompt/%20workers%20from%20around%20the%20world%20unite,%20they%20dance%20around%20a%20building%20site%20holding%20hands%20and%20singing%20into%20megaphones%20?width=800&height=800&nologo=true&seed=",
+  //   "https://image.pollinations.ai/prompt/%20workers%20from%20around%20the%20world%20unite,%20workers%20are%20all%20female%20wearing%20pink%20hard%20hats%20with%20banners%20reading%20%E2%80%9Cwomen%20workers%20unite%E2%80%9D%20on%20the%20building%20site%20?width=800&height=800&nologo=true&seed=",
+  //   "https://image.pollinations.ai/prompt/%20workers%20from%20around%20the%20world%20unite,%20workers%20hold%20babies%20in%20their%20arms.%20They%20are%20high%20up%20on%20girders%20over%20the%20building%20site,%20they%20smile%20and%20point%20into%20the%20distance%20towards%20the%20sunset%20where%20there%20are%20half%20finished%20apartment%20complexes%20under%20construction%20%E2%80%9D%20on%20the%20building%20site%20?width=800&height=800&nologo=true&seed=","https://image.pollinations.ai/prompt/bare%20chested%20muscular%20workers%20in%20hard%20hats%20on%20building%20construction%20site%20party%20like%20it%E2%80%99s%201989%20?width=800&height=800&nologo=true&seed=","https://image.pollinations.ai/prompt/joyous%20bare%20chested%20muscular%20workers%20in%20hard%20hats%20on%20building%20construction%20site%20perform%20acrobatic%20stunts%20with%20colorful%20confetti%20?width=800&height=800&nologo=true&seed="
+  // ];
+  //print(prmpts.length)
+  //img = await createImg(random(prmpts) + floor(random(1026)), "street scene");
 
   //img.position(cx,cy)
   img.parent("sketch-holder");
