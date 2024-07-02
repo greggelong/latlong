@@ -98,8 +98,10 @@ function speakit2() {
   fill(255, 0, 0);
   textStyle(BOLD);
   if(!mylat){
-    mylat =31 + random(1)
-    mylong=121 + random(1)
+    let mylatl =31 +random(1)
+    mylat = mylatl.toFixed(4)
+    let mylongl =121 + random(1)
+    mylong =mylongl.toFixed(4)
   }
   let c = stops[stops.length-1].chinese
   let e = stops[stops.length-1].english
