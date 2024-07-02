@@ -112,14 +112,17 @@ function speakit2() {
   text("site: " + e, 5, 400);
   //text("全世界工人联合起来", 5, 500);
   text("工人们辛苦了", 5, 500);
-  foo1.setLang("en-US");
-  foo1.speak("latitude: " + mylat + ",longitude: " + mylong);
-  foo1.speak(e)
-
+  
   foo.setLang("zh-CN");
+  foo.speak("纬度: " + mylat + ", 经度: " + mylong);
  
   //foo.speak(c+",全世界工人联合起来");
   foo.speak(c+",工人们辛苦了");
+
+  foo1.setLang("en-US");
+  
+  foo1.speak(e)
+
   
 
   let snap = createImg(canvas.toDataURL(), "snapshot");
