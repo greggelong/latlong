@@ -32,7 +32,8 @@ function setup() {
   background(0);
   ellipse(width / 2, height / 2, 100, 100);
 
-  speakButton = createButton("Speak it");
+  speakButton = createButton("Get site/获取地点");
+  speakButton.style("font-size",'30px')
   speakButton.size(300, 300);
   speakButton.mousePressed(speakit); // callback for speech
   speakButton.parent("buttonholder");
