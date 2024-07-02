@@ -145,16 +145,42 @@ async function getStreet(sitee) {
     }
      */
   let loc = random([
-    "a futuristic city ",
-    "an ancient monument site in desert ",
-    "a city on an alien world ",
-    "on a city floating in outer-space ",
+    "a futuristic city",
+    "an ancient monument site in the desert",
+    "a city on an alien world",
+    "a city floating in outer-space",
+    "a hidden underwater metropolis",
+    "a bustling medieval market town",
+    "a serene mountain village",
+    "a high-tech research facility on the moon",
+    "a mystical forest village",
+    "a post-apocalyptic wasteland",
+    "a sprawling subterranean city",
+    "a vibrant island paradise",
+    "a remote Arctic research station",
+    "an abandoned industrial complex",
+    "a utopian society in the clouds",
+    "a vibrant cyberpunk metropolis",
+    "an ancient castle on a cliffside",
+    "a futuristic underwater research station",
+    "a magical academy in the mountains",
+    "a floating island with waterfalls",
+    "a colony on Mars",
+    "a bustling spaceport city",
+    "a secret base in the jungle",
+    "a haunted ghost town",
+    "a grand palace in a desert oasis",
+    "a tranquil lakeside town",
+    "a futuristic vertical city",
+    "a vibrant alien marketplace",
+    "a sprawling nomadic caravan",
+    "a mysterious ancient labyrinth"
   ]);
   loc = loc+ "in a site called "+sitee
   print(loc)
   //img = await createImg("https://image.pollinations.ai/prompt/a%20view%20from%20the%20back%20of%20a%20taxi%20in%20a%20futuristic%20"+loc+"%20with%20a%20cool%20person%20in%20the%20backseat?width=800&height=800&nologo=true&seed="+floor(random(1026)),"street scene")
 
-    img = await createImg("https://image.pollinations.ai/prompt/two%20male%20workers%20and%20a%20female%20worker%20with%20yellow%20helments%20working%20on%20a%20larg%20construction%20site%20in%20"+loc+"?width=800&height=800&nologo=true&seed="+floor(random(1026)),"street scene");
+    img = await createImg("https://image.pollinations.ai/prompt/two%20male%20workers%20with%20dark%20hair%20and%20a%20female%20worker%20with%20dark%20hair%20with%20yellow%20helments%20viewed%20from%20a%20distance%20working%20on%20a%20larg%20construction%20site%20in%20"+loc+"?width=800&height=800&nologo=true&seed="+floor(random(1026)),"street scene");
   //img = await createImg("https://image.pollinations.ai/prompt/a%20larg%20construction%20site%20in%20"+loc+"?width=800&height=800&nologo=true&seed="+floor(random(1026)),"street scene");
   // let prmpts = [
   //   "https://image.pollinations.ai/prompt/%20workers%20from%20all%20around%20the%20world%20come%20together%20on%20the%20worksite,%20they%20cheer%20and%20are%20joyous%20as%20fireworks%20go%20off%20overhead?width=800&height=800&nologo=true&seed=",
