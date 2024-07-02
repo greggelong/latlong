@@ -182,7 +182,7 @@ async function getStreet(sitee) {
     "a sprawling nomadic caravan",
     "a mysterious ancient labyrinth"
   ]);
-  loc = loc+ "in a site called "+sitee
+  loc = loc+ " in a site called "+sitee
   print(loc)
   //img = await createImg("https://image.pollinations.ai/prompt/a%20view%20from%20the%20back%20of%20a%20taxi%20in%20a%20futuristic%20"+loc+"%20with%20a%20cool%20person%20in%20the%20backseat?width=800&height=800&nologo=true&seed="+floor(random(1026)),"street scene")
 
