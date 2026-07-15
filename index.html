@@ -1,52 +1,645 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
-  <script src="p5.min.js"></script>
-  <script src="p5.sound.min.js"></script>
-  <script src="p5.speech.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>艺术工人终端 · 工地记录仪</title>
+    <style>
+        /* 90s warning sign style: sharp corners, high contrast, raw */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <meta charset="utf-8" />
+        body {
+            background: #000000;
+            font-family: 'Courier New', 'IBM VGA', 'VT323', 'Microsoft YaHei', monospace;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
+        .warning-console {
+            max-width: 1400px;
+            width: 100%;
+            background: #111;
+            border: 4px solid #f5c518;
+            box-shadow: 8px 8px 0px 0px #7a2e00;
+            padding: 16px;
+        }
+
+        .hazard-header {
+            background: #000;
+            border-bottom: 3px solid #ffcc00;
+            margin-bottom: 24px;
+            padding: 8px 12px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .hazard-header h1 {
+            color: #ffcc00;
+            font-size: 2rem;
+            letter-spacing: -2px;
+            font-weight: bold;
+            text-shadow: 3px 3px 0 #5a2e00;
+        }
+
+        .hazard-header p {
+            color: #ffaa33;
+            font-size: 0.8rem;
+            background: #221c0f;
+            padding: 4px 8px;
+            border-left: 4px solid #ff8800;
+        }
+
+        .worksite-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .camera-zone {
+            flex: 2;
+            min-width: 300px;
+            background: #0a0a0a;
+            border: 2px solid #ffbb33;
+            padding: 10px;
+        }
+
+        .camera-frame {
+            background: #010101;
+            border: 1px solid #5f4c2b;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            background: #1e1a10;
+            border: none;
+        }
+
+        .status-bar {
+            background: #1f1b10;
+            color: #ffdd88;
+            padding: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 12px;
+            border-left: 6px solid #ffaa22;
+            font-family: monospace;
+            line-height: 1.4;
+        }
+
+        .status-bar .sub {
+            font-size: 0.7rem;
+            color: #ccaa66;
+        }
+
+        .action-btn {
+            display: block;
+            width: 100%;
+            background: #ffcc00;
+            border: 3px solid #000;
+            color: #000;
+            font-size: 2rem;
+            font-weight: 900;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            padding: 16px;
+            margin: 16px 0 8px;
+            cursor: pointer;
+            text-align: center;
+            letter-spacing: 2px;
+            box-shadow: 4px 4px 0 #4a2a00;
+            transition: 0.05s linear;
+        }
+
+        .action-btn .sub {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: normal;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .action-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #4a2a00;
+        }
+
+        .small-note {
+            font-family: monospace;
+            font-size: 12px;
+            color: #bbaa77;
+            background: #1e1b12;
+            padding: 8px;
+            border-top: 1px dashed #dd9922;
+            line-height: 1.5;
+        }
+
+        .small-note big {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffcc77;
+        }
+
+        .log-zone {
+            flex: 1.4;
+            min-width: 260px;
+            background: #050505;
+            border: 2px solid #aa7c3c;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .log-title {
+            background: #2c2400;
+            color: #ffdd77;
+            padding: 12px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-bottom: 3px solid #ffaa2a;
+            text-align: center;
+        }
+
+        .log-title .sub {
+            display: block;
+            font-size: 0.7rem;
+            color: #bbaa66;
+        }
+
+        .scroll-log {
+            flex: 1;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: 12px;
+            background: #030302;
+        }
+
+        .snapshot-card {
+            background: #13100a;
+            border: 1px solid #ab7e3a;
+            margin-bottom: 18px;
+            padding: 8px;
+        }
+
+        .snapshot-card img {
+            width: 100%;
+            background: black;
+            border: 1px solid #f5b642;
+            display: block;
+        }
+
+        .site-info {
+            font-size: 0.7rem;
+            font-family: 'Courier New', monospace;
+            color: #efcd82;
+            margin-top: 6px;
+            line-height: 1.4;
+            background: #00000088;
+            padding: 5px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            background: #2a2418;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #b87c2a;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 </head>
 
 <body>
-  <main>
-    <h1>在浏览器中打开 OPEN IN BROWSER!</h1>
-    <h2>按按钮获取您的位置、工作地点和图片</h2>
-    <h2>Press button to get you location, work site and image</h2>
-    <p>在城市中行驶时，您有机会成为“日常生活手册”的艺术民工，穿越时间和空间工作。正如手册所述，这个世界只是覆盖在根状宇宙上的一层薄膜。通过这个应用程序，您可以访问这些通常隐藏的工作地点，帮助宇宙的发展。
-    </p>
-    <p>将相机对准窗外，并点击“获取地点”按钮，您将获得一个上海的位置及其在根状宇宙中的对应地点。系统将为您生成一张 AI 图片。您可以多次点击“获取地点”按钮，探索不同的地点。
-    </p>
-    <p>As you ride through the city, you have the opportunity to become part of the art workers of "The Manual of
-      Everyday Life" as we work across time and space. As the manual tells us, this world is only one layer of film
-      stretched across the rhizomatic universe. With this app, you can visit these usually hidden worksites and help the
-      development of the universe.
-    </p>
-    <p>Aim the camera out the window and click the "Get Site" button to receive a location in Shanghai and its mapping
-      to a site in the rhizomatic universe. An AI-generated image will be created for you. You can click the "Get Site"
-      button as many times as you like to explore different locations.
-    </p>
+    <div class="warning-console">
+        <div class="hazard-header">
+            <h1>⚠️ 艺术工人终端 ⚠️</h1>
+            <p>ART WORKER TERMINAL // 工地记录仪</p>
+        </div>
+        <div class="worksite-panel">
+            <!-- LEFT: Camera + face detection -->
+            <div class="camera-zone">
+                <div class="camera-frame">
+                    <canvas id="mainCanvas" width="800" height="800" style="width:100%; aspect-ratio:1/1"></canvas>
+                </div>
+                <div class="status-bar" id="modelStatus">
+                    加载人脸模型中...
+                    <span class="sub">LOADING FACE MODELS</span>
+                </div>
+                <button class="action-btn" id="getSiteBtn">
+                    ⚡ 捕获工地 ⚡
+                    <span class="sub">CAPTURE WORKSITE</span>
+                </button>
+                <div class="small-note">
+                    <big>🔍 人脸识别</big> — 金色边框 + 标签「艺术工人」<br>
+                    <big>📍 虚构坐标</big> — 随机经纬度 (想象之地)<br>
+                    <big>🏗️ 独立工地名称</big> — 每次随机生成<br>
+                    <big>🗣️ 语音顺序</big> — 先截图，再中文 → 英文<br>
+                    <span style="color:#ddbb77;">FACE DETECTION // RANDOM COORDS // INDEPENDENT NAME // SNAPSHOT
+                        FIRST</span>
+                </div>
+            </div>
 
-    <div id="colorbox">
+            <!-- RIGHT: Scrolling snapshot log -->
+            <div class="log-zone">
+                <div class="log-title">
+                    📼 工地档案 · 滚动卷轴
+                    <span class="sub">WORKSITE CHRONICLE</span>
+                </div>
+                <div id="snapshotLog" class="scroll-log">
+                    <div style="color:#997744; text-align:center; padding:1rem;">
+                        点击按钮开始记录<br>
+                        <span style="font-size:0.7rem;">PRESS BUTTON TO LOG</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    </div>
-    <div id="sketch-holder">
-      <!-- Our AI created image goes here-->
+    <script>
+        // ================================
+        // ALL CODE COMMENTS IN ENGLISH
+        // UI TEXT: LARGE CHINESE + SMALL ENGLISH
+        // ================================
 
-    </div>
-    <div id="buttonholder">
-      <div id="button"></div>
+        // ---------- DOM elements ----------
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+        const modelStatusDiv = document.getElementById('modelStatus');
+        const snapshotLogDiv = document.getElementById('snapshotLog');
+        const getSiteBtn = document.getElementById('getSiteBtn');
 
-    </div>
-    <div class="art-workers-link">
-      <p><a href="https://greggelong.github.io/workers" target="_blank">Art Workers Home</a></p>
-    </div>
-  </main>
-  <script src="sketch.js"></script>
-  <script src="words.js"></script>
+        // ---------- Video & face detection state ----------
+        let video = null;
+        let faceDetections = [];
+        let modelsLoaded = false;
+        let detectionInterval = null;
+        let videoReady = false;
+        const MODEL_PATH = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
+
+        // ---------- Generate imaginary coordinates (random lat/lng) ----------
+        function getImaginaryCoordinates() {
+            const lat = (Math.random() * 180 - 90).toFixed(4);
+            const lng = (Math.random() * 360 - 180).toFixed(4);
+            return { lat, lng };
+        }
+
+        // ---------- Worksite name generator (independent from coordinates) ----------
+        const adjectives = [
+            { chinese: "火热", pinyin: "huǒ rè", english: "Blazing" },
+            { chinese: "钢铁", pinyin: "gāng tiě", english: "Iron" },
+            { chinese: "黎明", pinyin: "lí míng", english: "Dawn" },
+            { chinese: "红旗", pinyin: "hóng qí", english: "Red Flag" },
+            { chinese: "团结", pinyin: "tuán jié", english: "United" },
+            { chinese: "永铸", pinyin: "yǒng zhù", english: "Eternal Forge" },
+            { chinese: "飞跃", pinyin: "fēi yuè", english: "Soaring" },
+            { chinese: "星辰", pinyin: "xīng chén", english: "Stellar" },
+            { chinese: "梦幻", pinyin: "mèng huàn", english: "Dream" },
+            { chinese: "云端", pinyin: "yún duān", english: "Cloud" }
+        ];
+        const nouns = [
+            { chinese: "工人", pinyin: "gōng rén", english: "Workers" },
+            { chinese: "建设者", pinyin: "jiàn shè zhě", english: "Builders" },
+            { chinese: "塔吊", pinyin: "tǎ diào", english: "Crane" },
+            { chinese: "脚手架", pinyin: "jiǎo shǒu jià", english: "Scaffold" },
+            { chinese: "混凝土", pinyin: "hùn níng tǔ", english: "Concrete" },
+            { chinese: "钢梁", pinyin: "gāng liáng", english: "Steel Girder" },
+            { chinese: "蓝图", pinyin: "lán tú", english: "Blueprint" },
+            { chinese: "云梯", pinyin: "yún tī", english: "Cloud Ladder" }
+        ];
+        const places = [
+            { chinese: "联合工地", pinyin: "lián hé gōng dì", english: "United Site" },
+            { chinese: "世界之桥", pinyin: "shì jiè zhī qiáo", english: "World Bridge" },
+            { chinese: "光荣岗", pinyin: "guāng róng gǎng", english: "Glory Post" },
+            { chinese: "解放新区", pinyin: "jiě fàng xīn qū", english: "Liberation District" },
+            { chinese: "国际协作区", pinyin: "guó jì xié zuò qū", english: "International Cooperative Zone" },
+            { chinese: "未来厂", pinyin: "wèi lái chǎng", english: "Future Factory" },
+            { chinese: "梦境工地", pinyin: "mèng jìng gōng dì", english: "Dream Worksite" }
+        ];
+
+        function generateWorksiteName() {
+            const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+            const noun = nouns[Math.floor(Math.random() * nouns.length)];
+            const place = places[Math.floor(Math.random() * places.length)];
+            return {
+                chinese: `${adj.chinese}${noun.chinese}${place.chinese}`,
+                pinyin: `${adj.pinyin} ${noun.pinyin} ${place.pinyin}`,
+                english: `${adj.english} ${noun.english} ${place.english}`
+            };
+        }
+
+        // ---------- Current worksite data ----------
+        let currentSite = {
+            lat: null,
+            lng: null,
+            chineseName: '',
+            englishName: '',
+            pinyin: ''
+        };
+
+        // ---------- Speech functions (Promise-based, sequential) ----------
+        function speakChinese(text) {
+            return new Promise((resolve) => {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.9;
+                utterance.onend = () => resolve();
+                utterance.onerror = () => resolve();
+                window.speechSynthesis.speak(utterance);
+            });
+        }
+
+        function speakEnglish(text) {
+            return new Promise((resolve) => {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.95;
+                utterance.onend = () => resolve();
+                utterance.onerror = () => resolve();
+                window.speechSynthesis.speak(utterance);
+            });
+        }
+
+        // ---------- Capture canvas snapshot and add to log (immediate feedback) ----------
+        function captureSnapshotToLog() {
+            if (!currentSite.chineseName) return false;
+            const snapshotData = canvas.toDataURL('image/png');
+            const card = document.createElement('div');
+            card.className = 'snapshot-card';
+
+            const img = document.createElement('img');
+            img.src = snapshotData;
+            img.alt = 'worksite snapshot';
+
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'site-info';
+            const timeMark = new Date().toLocaleString('zh-CN');
+            infoDiv.innerHTML = `
+            📍 虚构坐标: ${currentSite.lat} , ${currentSite.lng}<br>
+            🏭 工地名称: ${currentSite.chineseName}<br>
+            🏗️ ENGLISH: ${currentSite.englishName}<br>
+            🧑‍🎨 艺术工人辛苦了<br>
+            ⏱️ ${timeMark}
+        `;
+            card.appendChild(img);
+            card.appendChild(infoDiv);
+            snapshotLogDiv.appendChild(card);
+            snapshotLogDiv.scrollTop = snapshotLogDiv.scrollHeight;
+            return true;
+        }
+
+        // ---------- Main action: snapshot FIRST, then speak (Chinese → English) ----------
+        async function onGetWorksite() {
+            try {
+                // 1. Generate imaginary coordinates and worksite name
+                const coords = getImaginaryCoordinates();
+                const site = generateWorksiteName();
+                currentSite = {
+                    lat: coords.lat,
+                    lng: coords.lng,
+                    chineseName: site.chinese,
+                    englishName: site.english,
+                    pinyin: site.pinyin
+                };
+
+                // 2. Immediately capture snapshot and add to log (visual feedback)
+                captureSnapshotToLog();
+                modelStatusDiv.innerHTML = `快照已保存 · ${site.chinese}<span class="sub">SNAPSHOT SAVED · SPEAKING...</span>`;
+
+                // 3. Then speak Chinese (coordinates + worksite + slogan)
+                const chineseMsg = `虚构坐标 纬度 ${coords.lat} 经度 ${coords.lng}，工地名称 ${site.chinese}，艺术工人辛苦了`;
+                const englishMsg = `Imaginary coordinates ${coords.lat}, ${coords.lng}, worksite: ${site.english}, art workers salute`;
+
+                await speakChinese(chineseMsg);
+                await speakEnglish(englishMsg);
+
+                // Update status after speech
+                setTimeout(() => {
+                    if (modelsLoaded) {
+                        modelStatusDiv.innerHTML = `人脸识别工作中 · 金色边框 + 艺术工人标签<span class="sub">FACE DETECTION ACTIVE</span>`;
+                    } else {
+                        modelStatusDiv.innerHTML = `就绪 · 模型状态: ${modelsLoaded}<span class="sub">READY · MODEL STATUS</span>`;
+                    }
+                }, 1000);
+            } catch (err) {
+                console.error(err);
+                modelStatusDiv.innerHTML = `错误 · 请重试<span class="sub">ERROR · RETRY</span>`;
+            }
+        }
+
+        // ---------- Load face-api models ----------
+        async function loadFaceModels() {
+            try {
+                await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_PATH);
+                modelsLoaded = true;
+                modelStatusDiv.innerHTML = `模型已加载 · 黄色人脸框 + 「艺术工人」<span class="sub">FACE MODEL READY</span>`;
+                startFaceDetectionLoop();
+            } catch (err) {
+                console.warn(err);
+                modelStatusDiv.innerHTML = `警告 · 人脸模型离线 (工地功能仍可用)<span class="sub">FACE MODEL FAILED · LOGGING STILL WORKS</span>`;
+                modelsLoaded = false;
+            }
+        }
+
+        function startFaceDetectionLoop() {
+            if (detectionInterval) clearInterval(detectionInterval);
+            detectionInterval = setInterval(async () => {
+                if (!modelsLoaded || !videoReady || !video) return;
+                try {
+                    const options = new faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.5 });
+                    const detections = await faceapi.detectAllFaces(video, options);
+                    faceDetections = detections;
+                } catch (e) { }
+            }, 150);
+        }
+
+        // ---------- Main draw loop: video, face boxes, large text ----------
+        function draw() {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw mirrored video if ready
+            if (videoReady && video && video.videoWidth > 0 && video.videoHeight > 0) {
+                ctx.save();
+                ctx.translate(canvas.width, 0);
+                ctx.scale(-1, 1);
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                ctx.restore();
+            } else {
+                ctx.fillStyle = "#1a150e";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#aa8833";
+                ctx.font = "bold 24px monospace";
+                ctx.fillText("<<< 无视频信号 >>>", 40, canvas.height / 2);
+                ctx.font = "16px monospace";
+                ctx.fillText("请允许摄像头权限", 40, canvas.height / 2 + 50);
+            }
+
+            // Draw face bounding boxes with "艺术工人" tag
+            if (modelsLoaded && videoReady && video && video.videoWidth > 0 && faceDetections.length > 0) {
+                const vidW = video.videoWidth;
+                const vidH = video.videoHeight;
+                const scaleX = canvas.width / vidW;
+                const scaleY = canvas.height / vidH;
+                for (let face of faceDetections) {
+                    const box = face.box;
+                    let origX = box.x;
+                    let origY = box.y;
+                    let bw = box.width;
+                    let bh = box.height;
+                    let sx = origX * scaleX;
+                    let sy = origY * scaleY;
+                    let sw = bw * scaleX;
+                    let sh = bh * scaleY;
+                    let mirroredX = canvas.width - (sx + sw);
+                    let mirroredY = sy;
+
+                    ctx.save();
+                    ctx.strokeStyle = "#FFD966";
+                    ctx.lineWidth = 5;
+                    ctx.strokeRect(mirroredX, mirroredY, sw, sh);
+                    ctx.strokeStyle = "#ff9933";
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(mirroredX - 1, mirroredY - 1, sw + 2, sh + 2);
+                    const label = "艺术工人";
+                    ctx.font = "bold 26px 'Courier New', monospace";
+                    const textW = ctx.measureText(label).width;
+                    const txtX = mirroredX + 8;
+                    const txtY = mirroredY - 10;
+                    ctx.fillStyle = "#FFCC55";
+                    ctx.fillRect(txtX - 5, txtY - 26, textW + 18, 32);
+                    ctx.fillStyle = "#1f2a0a";
+                    ctx.fillText(label, txtX, txtY - 4);
+                    ctx.restore();
+                }
+            } else if (modelsLoaded && videoReady && faceDetections.length === 0 && video && video.videoWidth) {
+                ctx.font = "bold 16px monospace";
+                ctx.fillStyle = "#ff8844";
+                ctx.fillText("⚠️ 未检测到人脸 · 请面向镜头", canvas.width - 320, 50);
+            }
+
+            // Display current worksite info (large Chinese text)
+            ctx.shadowBlur = 0;
+            if (currentSite.lat && currentSite.chineseName) {
+                // Coordinates line
+                ctx.font = "bold 36px 'Courier New', monospace";
+                const coordText = `📍 ${currentSite.lat} , ${currentSite.lng}`;
+                ctx.fillStyle = "rgba(0,0,0,0.7)";
+                ctx.fillRect(12, 45, ctx.measureText(coordText).width + 35, 58);
+                ctx.fillStyle = "#FFE484";
+                ctx.fillText(coordText, 18, 92);
+
+                // Chinese worksite name (very large)
+                ctx.font = "bold 52px 'Courier New', monospace";
+                const chnText = `🏭 ${currentSite.chineseName}`;
+                ctx.fillStyle = "rgba(0,0,0,0.75)";
+                ctx.fillRect(12, 125, ctx.measureText(chnText).width + 40, 72);
+                ctx.fillStyle = "#FFD966";
+                ctx.fillText(chnText, 18, 185);
+
+                // English worksite name (smaller, secondary)
+                ctx.font = "bold 28px monospace";
+                const engText = `${currentSite.englishName}`;
+                ctx.fillStyle = "rgba(0,0,0,0.7)";
+                ctx.fillRect(12, 215, Math.min(ctx.measureText(engText).width + 45, canvas.width - 40), 50);
+                ctx.fillStyle = "#ddbb88";
+                ctx.fillText(engText, 18, 258);
+
+                // Slogan at bottom
+                ctx.font = "bold 48px 'Courier New', monospace";
+                const slogan = "✊ 艺术工人辛苦了 ✊";
+                ctx.fillStyle = "rgba(0,0,0,0.8)";
+                const sloganW = ctx.measureText(slogan).width;
+                ctx.fillRect(canvas.width - sloganW - 45, canvas.height - 100, sloganW + 40, 72);
+                ctx.fillStyle = "#ffbb55";
+                ctx.fillText(slogan, canvas.width - sloganW - 35, canvas.height - 48);
+            } else {
+                ctx.font = "bold 28px monospace";
+                ctx.fillStyle = "rgba(0,0,0,0.7)";
+                ctx.fillRect(20, canvas.height - 120, 560, 70);
+                ctx.fillStyle = "#ffaa66";
+                ctx.fillText("⚡ 点击「捕获工地」开始记录 ⚡", 28, canvas.height - 72);
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        // ---------- Camera initialization ----------
+        async function initCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                video = document.createElement('video');
+                video.srcObject = stream;
+                video.setAttribute('playsinline', '');
+                video.muted = true;
+                video.playsInline = true;
+                await video.play();
+
+                await new Promise((resolve) => {
+                    const checkReady = () => {
+                        if (video.readyState >= 2 && video.videoWidth > 0 && video.videoHeight > 0) {
+                            videoReady = true;
+                            resolve();
+                        } else {
+                            video.addEventListener('loadeddata', checkReady, { once: true });
+                            setTimeout(() => {
+                                if (video.videoWidth > 0 && video.videoHeight > 0) {
+                                    videoReady = true;
+                                    resolve();
+                                }
+                            }, 1200);
+                        }
+                    };
+                    checkReady();
+                });
+                modelStatusDiv.innerHTML = `摄像头就绪 · 视频流已启动<span class="sub">CAMERA READY</span>`;
+            } catch (err) {
+                console.error("Camera error:", err);
+                modelStatusDiv.innerHTML = `错误 · 无法访问摄像头 (记录功能仍可用)<span class="sub">CAMERA BLOCKED · LOGGING WORKS</span>`;
+                videoReady = false;
+                const dummy = document.createElement('video');
+                dummy.readyState = 4;
+                video = dummy;
+            }
+        }
+
+        // ---------- Seed initial worksite (so canvas isn't empty) ----------
+        async function seedInitialSite() {
+            const coords = getImaginaryCoordinates();
+            const initSite = generateWorksiteName();
+            currentSite = {
+                lat: coords.lat,
+                lng: coords.lng,
+                chineseName: initSite.chinese,
+                englishName: initSite.english,
+                pinyin: initSite.pinyin
+            };
+            modelStatusDiv.innerHTML = `初始工地已就绪 · 点击按钮记录快照<span class="sub">INITIAL SITE READY</span>`;
+        }
+
+        // ---------- Bootstrap everything ----------
+        async function bootstrap() {
+            await initCamera();
+            draw();
+            loadFaceModels();
+            await seedInitialSite();
+            getSiteBtn.addEventListener('click', onGetWorksite);
+            console.log("Imaginary coordinate system — no real GPS, snapshot before speech, UI: Chinese large + English small");
+        }
+
+        bootstrap();
+    </script>
 </body>
 
 </html>
